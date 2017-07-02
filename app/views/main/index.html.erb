@@ -1,0 +1,31 @@
+<center>
+<h1><%= Date.current %> 今天谁做卫生~~？</h1>
+
+<% if @cleaners %>
+<% if @cleaners.first.id == @current_user.id %>
+<h2>就是你!</h2>
+<% else %>
+<h2><%= @cleaners.first.name %></h2>
+<% end %>
+<% else %>
+<h2>大吉大利，今天休息！</h2>
+<% end %>
+<p>
+
+
+=====持票统计=====<p>
+<table>
+<tr>
+  <th></th>
+  <th></th>
+</tr>
+
+<% User.inlab.each do |u| %>
+<tr>
+  <td><%= u.name %></td>
+  <td><%= u.ticket %></td>
+</tr>
+<% end %>
+
+</table>
+</csnter>

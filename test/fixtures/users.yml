@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sso_id: 1
+  account: MyString
+  name: MyString
+  nickname: MyString
+  email: MyString
+  ticket: 9.99
+
+two:
+  sso_id: 1
+  account: MyString
+  name: MyString
+  nickname: MyString
+  email: MyString
+  ticket: 9.99

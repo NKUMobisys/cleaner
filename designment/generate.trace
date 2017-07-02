@@ -1,0 +1,7 @@
+rails g model User sso_id:integer:index account:string name:string nickname:string email:string ticket:decimal
+
+rails g model CleanHistory date:date comment:string
+
+rails g migration CreateJoinTableUserCleanHistory user clean_history
+
+rails g migration AddStudyStateToUser

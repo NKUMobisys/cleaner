@@ -1,0 +1,4 @@
+server_host: p.mobisys.cc
+server_port: 80
+sso_host: sso.mobisys.cc
+sso_port: 80
