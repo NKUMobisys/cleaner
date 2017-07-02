@@ -58,7 +58,7 @@ class MainController < ApplicationController
         u.ticket.to_i.times { lottery_pool.push u }
       end
       if lottery_pool.empty?
-        refresh_all_tickets
+        User.refresh_all_tickets
         return
       end
       lottery_pool.shuffle!
@@ -76,13 +76,6 @@ class MainController < ApplicationController
       return nil if CleanHistory.last.nil?
       return nil if CleanHistory.last.date < Date.current
       return CleanHistory.last.users
-    end
-
-    def refresh_all_tickets
-      User.inlab_users.each do |u|
-        u.ticket = 5
-        u.save!
-      end
     end
 
 end

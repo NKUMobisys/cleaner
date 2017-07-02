@@ -1,7 +1,7 @@
 <center>
 <h1><%= Date.current %> 今天谁做卫生~~？</h1>
 
-<% if @cleaners %>
+<% unless @cleaners&.empty? %>
 <% if @cleaners.first.id == @current_user.id %>
 <h2>就是你!</h2>
 <% else %>
