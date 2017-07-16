@@ -72,12 +72,11 @@ module MobiSSO
 
     # TODO
     def query_all_user
-      current_host = 'cl.mobisys.cc'
       timestamp = Time.now.to_i.to_s
       token = gen_sso_token(current_host + timestamp + Settings.sso_token)
 
       uri_parm = {
-        host: Settings.sso_host, path: "/api/query_all_user",
+        host: Settings.sso_host, port: Settings.sso_port, path: "/api/query_all_user",
         query: {
           from: current_host,
           timestamp: timestamp,

@@ -15,7 +15,7 @@ class User::SessionController < ApplicationController
     def sso_login
       timestamp = Time.now.to_i.to_s
       token = gen_sso_token(current_host + timestamp + Settings.sso_token)
-      sso_request = URI::HTTP.build(host: Settings.sso_host, path: "/users/sign_in",
+      sso_request = URI::HTTP.build(host: Settings.sso_host, port: Settings.sso_port, path: "/users/sign_in",
         query: {
           from: current_server,
           timestamp: timestamp,
