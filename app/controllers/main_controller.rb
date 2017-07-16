@@ -6,8 +6,9 @@ class MainController < ApplicationController
       render 'waiting'
       return
     end
+    @revealer = false
     if should_gen_new_cleaner
-      gen_new_cleaner
+      @revealer = gen_new_cleaner
     end
     @cleaners = get_current_cleaner
     @cleaner_info = get_cleaner_info
@@ -60,7 +61,7 @@ class MainController < ApplicationController
       end
 
       if today_is_weekend?
-        return
+        # return
       end
 
       lottery_pool = []
@@ -80,6 +81,7 @@ class MainController < ApplicationController
 
       ch.save!
       cleaner.save!
+      true
     end
 
     def get_current_cleaner

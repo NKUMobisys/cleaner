@@ -76,7 +76,7 @@ module MobiSSO
       token = gen_sso_token(current_host + timestamp + Settings.sso_token)
 
       uri_parm = {
-        host: Settings.sso_host, port: Settings.sso_port, path: "/api/query_all_user",
+        host: Settings.sso_host, path: "/api/query_all_user",
         query: {
           from: current_host,
           timestamp: timestamp,
@@ -87,7 +87,7 @@ module MobiSSO
       if Settings.sso_ssl
         uri =  URI::HTTPS.build(uri_parm)
       else
-        uri = URI::HTTP.build(uri_parm)
+        uri = URI::HTTP.build(uri_parm.merge({port: Settings.sso_port}))
       end
 
       Net::HTTP.get(uri)

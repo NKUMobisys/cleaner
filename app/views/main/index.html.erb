@@ -1,7 +1,31 @@
 <center>
 <h1><%= Date.current %> 今天谁做卫生~~？</h1>
 
-<h2> <%= @cleaner_info %></h2>
+
+
+<div id="scratch">
+  <% if @revealer %>
+    <div id="card" class="cleaner">
+  <% else %>
+    <div class="cleaner">
+  <% end %>
+      <%= @cleaner_info %>
+    </div>
+</div>
+<script>
+LuckyCard.case({
+    ratio: .7
+}, function() {
+    // alert('至于你信不信，我反正不信！');
+    // this.clearCover();
+});
+// LuckyCard.case({
+//     ratio: .6
+// }, function() {
+//     alert('至于你信不信，我反正不信！');
+//     // this.clearCover();
+// });
+</script>
 <p>
 
 
