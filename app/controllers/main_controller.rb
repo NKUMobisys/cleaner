@@ -61,7 +61,7 @@ class MainController < ApplicationController
       end
 
       if today_is_weekend?
-        # return
+        return
       end
 
       lottery_pool = []
