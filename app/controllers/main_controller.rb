@@ -57,6 +57,7 @@ class MainController < ApplicationController
       seed = (Time.now.to_f * 1000).to_i
 
       if seed % 66 < 6
+        ch.save!
         return
       end
 
