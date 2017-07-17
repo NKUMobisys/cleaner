@@ -35,7 +35,9 @@ class MainController < ApplicationController
       end
     end
 
-    @emoji[0] = "👑"
+    if @ulist[0].ticket < @ulist[1].ticket
+      @emoji[0] = "👑"
+    end
 
   end
 
