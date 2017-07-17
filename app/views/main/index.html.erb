@@ -1,21 +1,32 @@
 <center>
 <h1><%= Date.current %> 今天谁做卫生~~？</h1>
 
+<div id="main-info">
 
-
+<% if @cleaner_info[:type] == :normal %>
 <div id="scratch">
-  <% if @revealer %>
-    <div id="card" class="cleaner">
-  <% else %>
+  <% if @unreveal %>
+  <div id="card" class="cleaner" ch-id="<%= @clean_history.id %>">
+    <% else %>
     <div class="cleaner">
-  <% end %>
-      <%= @cleaner_info %>
+      <img src="<%= @scratch %>" id="reveal-scratch">
+      <% end %>
+      <%= @cleaner_info[:cleaner] %>
     </div>
+  </div>
+  <% else %>
+  <h1><%= @cleaner_info[:cleaner] %></h1>
+  <% end %>
+
+  <% unless @unreveal %>
+  <div class="">
+    开奖: <%= @revealer_name %>
+  </div>
+  <% end %>
+
 </div>
 
-<p>
-
-
+<% unless @unreveal %>
 =====持票统计=====<p>
 <table>
 <tr>
@@ -32,3 +43,4 @@
 
 </table>
 </csnter>
+<% end %>

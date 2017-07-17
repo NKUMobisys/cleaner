@@ -48,7 +48,7 @@
     };
 
     function _calcArea(ctx, callback, ratio) {
-        var pixels = ctx.getImageData(0, 0, 300, 100);
+        var pixels = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
         var transPixels = [];
         _forEach(pixels.data, function(item, i) {
             var pixel = pixels.data[i + 3];
@@ -58,7 +58,7 @@
         });
 
         if (transPixels.length / pixels.data.length > ratio) {
-            callback && typeof callback === 'function' && callback();
+            callback && typeof callback === 'function' && callback('ratio');
         }
     }
 
@@ -102,6 +102,7 @@
         this.ctx.arc(mouseX, mouseY, 10, 0, 2 * Math.PI);
         this.ctx.fill();
 
+        if (this.opt.callback && typeof this.opt.callback === 'function') this.opt.callback('move');
         event.preventDefault();
     };
 

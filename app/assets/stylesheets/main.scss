@@ -16,3 +16,24 @@
     height: 70px;
     margin: 20px auto 0;
 }
+
+@mixin scratch-transform($time, $type) {
+  -webkit-transition: opacity $time $type;
+  -moz-transition:    opacity $time $type;
+  -o-transition:      opacity $time $type;
+  transition:         opacity $time $type;
+}
+
+#reveal-scratch{
+  position: absolute;
+  left: 0;
+  opacity: 1;
+  &:hover{
+    opacity: 0.1;
+    @include scratch-transform(1s, cubic-bezier(0.72, 0.08, 1, -0.02));
+  }
+}
+
+#main-info{
+  margin-bottom: 36px;
+}

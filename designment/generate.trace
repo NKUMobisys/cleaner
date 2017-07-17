@@ -5,3 +5,7 @@ rails g model CleanHistory date:date comment:string
 rails g migration CreateJoinTableUserCleanHistory user clean_history
 
 rails g migration AddStudyStateToUser
+
+
+2017-07-17 14:43:56
+rails g model RevealHistory user:references seed:integer{8} scratch:text clean_history:references

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702114240) do
+ActiveRecord::Schema.define(version: 20170717065251) do
 
   create_table "clean_histories", force: :cascade do |t|
     t.date     "date"
@@ -24,6 +24,17 @@ ActiveRecord::Schema.define(version: 20170702114240) do
     t.integer "clean_history_id", null: false
     t.index ["clean_history_id", "user_id"], name: "index_clean_histories_users_on_clean_history_id_and_user_id"
     t.index ["user_id", "clean_history_id"], name: "index_clean_histories_users_on_user_id_and_clean_history_id"
+  end
+
+  create_table "reveal_histories", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "seed",             limit: 8
+    t.text     "scratch"
+    t.integer  "clean_history_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["clean_history_id"], name: "index_reveal_histories_on_clean_history_id"
+    t.index ["user_id"], name: "index_reveal_histories_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

@@ -6,10 +6,19 @@ class MainController < ApplicationController
       render 'waiting'
       return
     end
-    @revealer = false
+    @unreveal = false
+
     if should_gen_new_cleaner
-      @revealer = gen_new_cleaner
+      @unreveal = gen_new_cleaner
+    else
+      @clean_history = CleanHistory.last
+
+      rh = @clean_history.reveal_history
+      @scratch = rh.scratch
+      @revealer_name = conv_revealer_name(rh.user.name)
+      # p @scratch
     end
+
     @cleaners = get_current_cleaner
     @cleaner_info = get_cleaner_info
   end
@@ -36,6 +45,29 @@ class MainController < ApplicationController
     render json: @users.to_json
   end
 
+  def lucky_card
+    ch_id = params['clean_history']
+    ch = CleanHistory.find_by(id: ch_id)
+    rh = ch.reveal_history
+    if rh.user != current_user
+      render json: {}, status: :forbidden
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      if rh.scratch.nil?
+        cleaner = rh.clean_history.users.first
+        cleaner.ticket -= 1
+        cleaner.save!
+      end
+
+      rh.scratch = params["scratch"]
+      rh.save!
+    end
+
+    render json: {status: :ok}
+  end
+
   protected
     def today_is_weekend?
       Date.current.saturday? || Date.current.sunday?
@@ -46,67 +78,93 @@ class MainController < ApplicationController
     end
 
     def should_gen_new_cleaner
-      return true if CleanHistory.last.nil?
-      return true if CleanHistory.last.date < Date.current
+      ch = CleanHistory.last
+      return true if ch.nil?
+      return true if ch.date < Date.current
+
+      if !ch.users.empty? && ch.reveal_history&.scratch.nil?
+        ch.destroy
+        return true
+      end
+      false
     end
 
+    def conv_cleaner_name(name)
+      if name==@current_user.name
+        return '就是你'
+      end
+      name
+    end
+
+    def conv_revealer_name(name)
+      if name==@clean_history.users.first&.name
+        return '自摸'
+      end
+      name
+    end
 
     def gen_new_cleaner
       ch = CleanHistory.new
       ch.date = Date.current
-      seed = (Time.now.to_f * 1000).to_i
+      seed = (Time.now.to_f * 1000).to_i - SecureRandom.hex(1).to_i(16)
 
-      if seed % 66 < 6
-        ch.save!
-        return
-      end
 
       if today_is_weekend?
         return
       end
 
-      lottery_pool = []
-      User.inlab.each do |u|
-        u.ticket.to_i.times { lottery_pool.push u }
-      end
-      if lottery_pool.empty?
-        User.refresh_all_tickets
-        return
-      end
-      lottery_pool.shuffle!
+      if Date.current.monday? || !(seed%66 < 6)
+        lottery_pool = []
+        User.inlab.each do |u|
+          uticket = u.ticket.to_i
+          (uticket**3).times { lottery_pool.push u }
+        end
+        if lottery_pool.empty?
+          User.refresh_all_tickets
+          return
+        end
 
-      idx = seed % lottery_pool.size
-      cleaner = lottery_pool[idx]
-      ch.users << cleaner
-      cleaner.ticket -= 1
+        p seed, lottery_pool.size
+
+        idx = seed % lottery_pool.size
+        cleaner = lottery_pool[idx]
+        ch.users << cleaner
+      end
+      # cleaner.ticket -= 1
+
+
 
       ch.save!
-      cleaner.save!
+      # cleaner.save!
+
+      rh = RevealHistory.new
+      rh.clean_history = ch
+      rh.user = current_user
+      rh.seed = seed
+      rh.save!
+
+      @clean_history = ch
       true
     end
 
     def get_current_cleaner
-      return nil if CleanHistory.last.nil?
-      return nil if CleanHistory.last.date < Date.current
-      return CleanHistory.last.users
+      return nil if @clean_history.nil?
+      return nil if @clean_history.date < Date.current
+      return @clean_history.users
     end
 
     def get_cleaner_info
       if @cleaners && !@cleaners.empty?
-        if @cleaners.first.id == @current_user.id
-          return "就是你!"
-        else
-          return @cleaners.first.name
-        end
+        return {type: :normal, cleaner: conv_cleaner_name(@cleaners.first.name)}
       else
         if today_is_weekend?
-          return "周末放假"
+          return {type: :weekend, cleaner: "周末放假"}
         else
-          return "大吉大利，今天休息！"
+          return {type: :lucky, cleaner: "大吉大利，今天休息！"}
         end
       end
 
-      "NIL"
+      {type: :error, cleaner: "error"}
     end
 
 end
