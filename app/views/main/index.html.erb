@@ -32,12 +32,14 @@
 <tr>
   <th></th>
   <th></th>
+  <th></th>
 </tr>
 
-<% User.inlab.order(:ticket).each do |u| %>
+<% @ulist.each_with_index do |u, i| %>
 <tr>
-  <td><%= u.name %></td>
+  <td></span><%= u.name %></td>
   <td><%= u.ticket %></td>
+  <td><span class="emoji"><%= @emoji[i] %></td>
 </tr>
 <% end %>
 

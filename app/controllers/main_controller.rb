@@ -21,6 +21,22 @@ class MainController < ApplicationController
 
     @cleaners = get_current_cleaner
     @cleaner_info = get_cleaner_info
+
+    @ulist = User.inlab.order(:ticket)
+    @emoji = [""] * @ulist.size
+
+
+    max_ticket = @ulist.last.ticket
+    min_ticket = @ulist.first.ticket
+
+    if max_ticket-min_ticket >= 3 && @ulist[-@ulist.size/3].ticket < max_ticket
+      @ulist.each_with_index do |u, i|
+        @emoji[i] = "😎" if u.ticket == max_ticket
+      end
+    end
+
+    @emoji[0] = "👑"
+
   end
 
   def waiting
