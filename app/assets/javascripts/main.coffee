@@ -3,12 +3,16 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $(document).ready ->
-
   pre_cleaner = $("#card").html()
+
+  if !pre_cleaner
+    return
+
   $("#card").html("")
   LuckyCard.case({
       ratio: .01
   }, (type, arg)->
+
       if type=="move"
         if pre_cleaner
           $("#card").html(pre_cleaner)
@@ -26,6 +30,10 @@ $(document).ready ->
           url: "/lucky_card",
           type: "POST",
           data: {scratch: c.toDataURL(), clean_history: ch_id},
-          success: ->
+          success: (data)->
+            console.log data
+            if data.status != 'ok'
+              alert('你手慢了，该票已作废lol')
+              window.location.reload()
         });
   );

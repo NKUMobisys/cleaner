@@ -6,15 +6,15 @@
 <% if @cleaner_info[:type] == :normal %>
 <div id="scratch">
   <% if @unreveal %>
-  <div id="card" class="cleaner" ch-id="<%= @clean_history.id %>">
-    <% else %>
+    <div id="card" class="cleaner" ch-id="<%= @clean_history.id %>">
+  <% else %>
     <div class="cleaner">
       <img src="<%= @scratch %>" id="reveal-scratch">
-      <% end %>
+  <% end %>
       <%= @cleaner_info[:cleaner] %>
     </div>
   </div>
-  <% else %>
+<% else %>
   <h1><%= @cleaner_info[:cleaner] %></h1>
   <% end %>
 

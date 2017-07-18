@@ -8,8 +8,11 @@ Rails.application.routes.draw do
     end
   end
 
+
+
   get 'main/index'
   get 'main/waiting', as: 'waiting'
+  get 'timeout', to: 'main#timeout'
   get 'sync_user', to: 'main#sync_user', as: 'sync_user'
 
   post 'lucky_card', to: 'main#lucky_card', as: 'lucky_card'

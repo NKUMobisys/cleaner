@@ -44,6 +44,10 @@ class MainController < ApplicationController
   def waiting
   end
 
+  def timeout
+    render plain: 'Operation timeout'
+  end
+
   def sync_user
     @users = JSON.parse(query_all_user).map do |uinfo|
       uinfo['sso_id'] = uinfo['id']
@@ -66,6 +70,12 @@ class MainController < ApplicationController
   def lucky_card
     ch_id = params['clean_history']
     ch = CleanHistory.find_by(id: ch_id)
+
+    if ch.nil?
+      render json:{status: :failed}
+      return
+    end
+
     rh = ch.reveal_history
     if rh.user != current_user
       render json: {}, status: :forbidden
