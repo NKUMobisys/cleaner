@@ -57,8 +57,9 @@
             }
         });
 
+        var current_ratio = transPixels.length / pixels.data.length;
         if (transPixels.length / pixels.data.length > ratio) {
-            callback && typeof callback === 'function' && callback('ratio');
+            callback && typeof callback === 'function' && callback('ratio', current_ratio);
         }
     }
 
