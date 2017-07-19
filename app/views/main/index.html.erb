@@ -18,7 +18,7 @@
   <h1><%= @cleaner_info[:cleaner] %></h1>
   <% end %>
 
-  <% unless @unreveal %>
+  <% unless @unreveal && @cleaner_info[:type] == :normal %>
   <div class="">
     开奖: <%= @revealer_name %>
   </div>
@@ -26,7 +26,7 @@
 
 </div>
 
-<% unless @unreveal %>
+<% unless @unreveal && @cleaner_info[:type] == :normal%>
 =====持票统计=====<p>
 <table>
 <tr>

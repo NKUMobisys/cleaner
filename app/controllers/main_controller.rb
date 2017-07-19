@@ -7,17 +7,17 @@ class MainController < ApplicationController
       return
     end
     @unreveal = false
-
+    # CleanHistory.last.destroy
     if should_gen_new_cleaner
       @unreveal = gen_new_cleaner
     else
       @clean_history = CleanHistory.last
 
-      rh = @clean_history.reveal_history
-      @scratch = rh.scratch
-      @revealer_name = conv_revealer_name(rh.user.name)
       # p @scratch
     end
+    rh = @clean_history.reveal_history
+    @scratch = rh.scratch
+    @revealer_name = conv_revealer_name(rh.user.name)
 
     @cleaners = get_current_cleaner
     @cleaner_info = get_cleaner_info
@@ -141,22 +141,33 @@ class MainController < ApplicationController
         return
       end
 
-      if Date.current.monday? || !(seed%66 < 6)
+
+      loop do
         lottery_pool = []
+        min_ticket = 0x3f3f3f3f
         User.inlab.each do |u|
           uticket = u.ticket.to_i
+          min_ticket = [min_ticket, uticket].min
           (uticket**3).times { lottery_pool.push u }
         end
         if lottery_pool.empty?
           User.refresh_all_tickets
-          return
+          break
         end
 
-        p seed, lottery_pool.size
+        unless Date.current.monday?
+          ((min_ticket**3)/2).times { lottery_pool.push nil }
+        end
+
+        p seed, min_ticket**3/2, lottery_pool.size
 
         idx = seed % lottery_pool.size
         cleaner = lottery_pool[idx]
+
+        break if cleaner.nil?
         ch.users << cleaner
+
+        break
       end
       # cleaner.ticket -= 1
 

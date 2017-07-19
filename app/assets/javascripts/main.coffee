@@ -7,7 +7,8 @@ $(document).ready ->
 
   if !pre_cleaner
     return
-
+  play_counter = 0
+  pre_ratio = 0
   $("#card").html("")
   LuckyCard.case({
       ratio: .01
@@ -20,7 +21,10 @@ $(document).ready ->
 
       if type=="ratio"
         console.log "ratio: #{arg}"
-        if arg > 0.75
+        deta = arg - pre_ratio
+        pre_ratio = arg
+        play_counter += 1
+        if arg > 0.75 || deta > 0.5 || play_counter > 5
            window.location.reload()
         c = document.getElementById("cover")
         # console.log(c.toDataURL())
