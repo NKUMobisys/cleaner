@@ -24,7 +24,7 @@ $(document).ready ->
         deta = arg - pre_ratio
         pre_ratio = arg
         play_counter += 1
-        if arg > 0.75 || deta > 0.5 || play_counter > 5
+        if arg > 0.70 || deta > 0.4 || play_counter > 4
            window.location.reload()
         c = document.getElementById("cover")
         # console.log(c.toDataURL())
