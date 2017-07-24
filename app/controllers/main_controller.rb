@@ -1,11 +1,17 @@
 class MainController < ApplicationController
   before_action :set_open_time
 
+  # TODO add lock
   def index
     if Time.current < @open_time
       render 'waiting'
       return
     end
+    if opening?
+      render 'wait_opening'
+      return
+    end
+
     @unreveal = false
     # CleanHistory.last.destroy
     if should_gen_new_cleaner
@@ -97,6 +103,18 @@ class MainController < ApplicationController
   end
 
   protected
+    def opening?
+      protect_time = 1.minutes
+      ch = CleanHistory.last
+      in_time = Time.now < ch.created_at + protect_time
+      no_open = ch.reveal_history.scratch.nil?
+      if in_time && no_open
+        @remain_time = protect_time - (Time.now - ch.created_at)
+        return true
+      end
+      false
+    end
+
     def today_is_weekend?
       Date.current.saturday? || Date.current.sunday?
     end

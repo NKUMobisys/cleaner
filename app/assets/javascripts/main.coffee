@@ -18,13 +18,15 @@ $(document).ready ->
         if pre_cleaner
           $("#card").html(pre_cleaner)
           pre_cleaner = null
+          type = "ratio"
+          arg = 0.01
 
       if type=="ratio"
         console.log "ratio: #{arg}"
         deta = arg - pre_ratio
         pre_ratio = arg
         play_counter += 1
-        if arg > 0.70 || deta > 0.4 || play_counter > 4
+        if arg > 0.70 || deta > 0.4 || play_counter > 5
            window.location.reload()
         c = document.getElementById("cover")
         # console.log(c.toDataURL())
