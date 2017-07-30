@@ -155,12 +155,13 @@ class MainController < ApplicationController
       seed = (Time.now.to_f * 1000).to_i - SecureRandom.hex(1).to_i(16)
 
 
-      if today_is_weekend?
-        return
-      end
 
 
       loop do
+        if today_is_weekend?
+          break
+        end
+        
         lottery_pool = []
         min_ticket = 0x3f3f3f3f
         User.inlab.each do |u|
