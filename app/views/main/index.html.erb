@@ -20,7 +20,8 @@
 
   <% unless @unreveal && @cleaner_info[:type] == :normal %>
   <div class="">
-    开奖: <%= @revealer_name %>
+    开奖: <%= @revealer_name %><br>
+    <%= ((@cleaner_info[:user].ticket+1)**3 / @total_tickets.to_f * 100).round(1) %> %
   </div>
   <% end %>
 
@@ -33,13 +34,17 @@
   <th></th>
   <th></th>
   <th></th>
+  <!-- <th></th> -->
+  <!-- <th></th> -->
 </tr>
 
 <% @ulist.each_with_index do |u, i| %>
 <tr>
-  <td></span><%= u.name %></td>
+  <td class="cleaner_name"><span class="emoji"><%= @emoji[i] %></span><%= u.name %></td>
   <td><%= u.ticket %></td>
-  <td><span class="emoji"><%= @emoji[i] %></td>
+  <td><%= (u.ticket**3 / @total_tickets.to_f * 100).round(1) %>%</td>
+  <!-- <td></td> -->
+    <!-- <td></td> -->
 </tr>
 <% end %>
 

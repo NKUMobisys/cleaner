@@ -45,6 +45,12 @@ class MainController < ApplicationController
       @emoji[0] = "👑"
     end
 
+    @total_tickets = 0
+
+    User.inlab.each do |u|
+      @total_tickets += u.ticket**3
+    end
+
   end
 
   def waiting
@@ -161,7 +167,7 @@ class MainController < ApplicationController
         if today_is_weekend?
           break
         end
-        
+
         lottery_pool = []
         min_ticket = 0x3f3f3f3f
         User.inlab.each do |u|
@@ -213,7 +219,7 @@ class MainController < ApplicationController
 
     def get_cleaner_info
       if @cleaners && !@cleaners.empty?
-        return {type: :normal, cleaner: conv_cleaner_name(@cleaners.first.name)}
+        return {type: :normal, cleaner: conv_cleaner_name(@cleaners.first.name), user: @cleaners.first}
       else
         if today_is_weekend?
           return {type: :weekend, cleaner: "周末放假"}
