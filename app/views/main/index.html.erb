@@ -18,7 +18,7 @@
   <h1><%= @cleaner_info[:cleaner] %></h1>
   <% end %>
 
-  <% unless @unreveal && @cleaner_info[:type] == :normal %>
+  <% if !@unreveal && @cleaner_info[:type] == :normal %>
   <div class="">
     开奖: <%= @revealer_name %><br>
     <%= ((@cleaner_info[:user].ticket+1)**3 / @total_tickets.to_f * 100).round(1) %> %
@@ -27,7 +27,7 @@
 
 </div>
 
-<% unless @unreveal && @cleaner_info[:type] == :normal%>
+<% if !@unreveal && @cleaner_info[:type] == :normal%>
 =====持票统计=====<p>
 <table>
 <tr>
