@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   root to: 'main#index'
 
   namespace :user do
@@ -9,6 +10,9 @@ Rails.application.routes.draw do
   end
 
 
+  get 'admin/index'
+  post 'admin/clean_state'
+  post 'admin/away_state'
 
   get 'main/index'
   get 'main/waiting', as: 'waiting'

@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  reveal_history: one
+  ticket: 9.99
+
+two:
+  user: two
+  reveal_history: two
+  ticket: 9.99

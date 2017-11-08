@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170717065251) do
+ActiveRecord::Schema.define(version: 20171107102517) do
 
   create_table "clean_histories", force: :cascade do |t|
     t.date     "date"
@@ -37,6 +37,16 @@ ActiveRecord::Schema.define(version: 20170717065251) do
     t.index ["user_id"], name: "index_reveal_histories_on_user_id"
   end
 
+  create_table "reveal_involvers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "reveal_history_id"
+    t.decimal  "ticket"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["reveal_history_id"], name: "index_reveal_involvers_on_reveal_history_id"
+    t.index ["user_id"], name: "index_reveal_involvers_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.integer  "sso_id"
     t.string   "account"
@@ -47,6 +57,7 @@ ActiveRecord::Schema.define(version: 20170717065251) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.integer  "study_state_id"
+    t.integer  "clean_state"
     t.index ["sso_id"], name: "index_users_on_sso_id"
     t.index ["study_state_id"], name: "index_users_on_study_state_id"
   end

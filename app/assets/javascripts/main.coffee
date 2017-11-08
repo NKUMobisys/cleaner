@@ -2,7 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-$(document).ready ->
+$( document ).on('turbolinks:load', ->
   pre_cleaner = $("#card").html()
 
   if !pre_cleaner
@@ -20,6 +20,7 @@ $(document).ready ->
           pre_cleaner = null
           type = "ratio"
           arg = 0.01
+          $("#submit-lucky").css("visibility", "visible");
 
       if type=="ratio"
         console.log "ratio: #{arg}"
@@ -43,3 +44,4 @@ $(document).ready ->
               window.location.reload()
         });
   );
+)

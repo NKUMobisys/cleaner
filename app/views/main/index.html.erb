@@ -3,51 +3,84 @@
 
 <div id="main-info">
 
-<% if @cleaner_info[:type] == :normal %>
-<div id="scratch">
-  <% if @unreveal %>
+  <% if @cleaner_info[:type] == :normal %>
+
+  <div id="scratch">
+    <% if @unreveal %>
     <div id="card" class="cleaner" ch-id="<%= @clean_history.id %>">
-  <% else %>
+    <% else %>
     <div class="cleaner">
       <img src="<%= @scratch %>" id="reveal-scratch">
-  <% end %>
-      <%= @cleaner_info[:cleaner] %>
+    <% end %>
+      <%= @cleaner.name %>
     </div>
   </div>
-<% else %>
-  <h1><%= @cleaner_info[:cleaner] %></h1>
+  <% if @unreveal %>
+  <%= button_tag "抽好了", :onclick => "location.reload()", class: "btn btn-primary", id: "submit-lucky" %>
   <% end %>
 
-  <% if !@unreveal && @cleaner_info[:type] == :normal %>
-  <div class="">
-    开奖: <%= @revealer_name %><br>
-    <%= ((@cleaner_info[:user].ticket+1)**3 / @total_tickets.to_f * 100).round(1) %> %
-  </div>
+    <% if !@unreveal %>
+    <div class="">
+      开奖: <%= @revealer_name %><br>
+      <%# ((@cleaner_info[:user].ticket+1)**3 / @total_tickets.to_f * 100).round(1) %>
+      <%= @cleaner_lucky %>%
+    </div>
+    <% end %>
+  <% else %>
+  <h1><%= @special %></h1>
   <% end %>
 
 </div>
 
-<% if !@unreveal && @cleaner_info[:type] == :normal%>
+<% if  @cleaner_info[:type] == :normal%>
 =====持票统计=====<p>
 <table>
-<tr>
-  <th></th>
-  <th></th>
-  <th></th>
-  <!-- <th></th> -->
-  <!-- <th></th> -->
-</tr>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
 
-<% @ulist.each_with_index do |u, i| %>
-<tr>
-  <td class="cleaner_name"><span class="emoji"><%= @emoji[i] %></span><%= u.name %></td>
-  <td><%= u.ticket %></td>
-  <td><%= (u.ticket**3 / @total_tickets.to_f * 100).round(1) %>%</td>
-  <!-- <td></td> -->
+  <% @ulist.each_with_index do |u, i| %>
+  <tr>
+    <td class="cleaner_name">
+      <span class="emoji"><%# @emoji[i] %></span>
+      <%= u.name %></td>
+    <td><%= u.ticket %></td>
+    <td><%= (User.vt(u.ticket)/ @total_tickets.to_f * 100).round(1) %>%</td>
     <!-- <td></td> -->
-</tr>
+      <!-- <td></td> -->
+  </tr>
+  <% end %>
+</table>
+
+<% unless @awaylist.empty? %>
+  <!-- true -->
+<div class="">
+  ------请假------
+</div>
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  <% @awaylist.each_with_index do |u, i| %>
+  <tr>
+    <td class="cleaner_name"><%= u.name %></td>
+    <td><%= u.ticket %></td>
+    <td>--</td>
+      <!-- <td></td> -->
+  </tr>
+<% end %>
+</table>
+
 <% end %>
 
-</table>
-</csnter>
 <% end %>
+
+<div id="go-admin">
+  <%= link_to "请假/销假/调整=>点这里", admin_index_path, class: "btn btn-primary" %>
+</div>
+
+</center>

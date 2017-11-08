@@ -55,3 +55,20 @@ td{
   font-size: 22px;
   float: left;
 }
+
+
+#go-admin{
+  margin-top: 20px;
+  color: red;
+  a{
+    &:visited{
+      color: red;
+    }
+  }
+
+}
+
+
+#submit-lucky{
+  visibility: hidden;
+}

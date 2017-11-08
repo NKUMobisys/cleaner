@@ -1,0 +1,27 @@
+<center>
+<h1>Admin#index</h1>
+
+<div class="">
+  <table>
+      <tr>
+        <th></th>
+        <th>请假？</th>
+        <th>参与卫生</th>
+      </tr>
+      <% @users.each do |u| %>
+      <tr>
+        <td><%= u.name %></td>
+        <td class="awaybox">
+          <%= check_box_tag u.id, u.clean_state, u.clean_state==2, {disabled: u.clean_state==0} %>
+        </td>
+        <td class="candobox">
+          <%= check_box_tag u.id, u.clean_state, u.clean_state!=0 %>
+        </td>
+      </tr>
+      <% end %>
+  </table>
+</div>
+
+<%= link_to "返回", root_path, class: "btn btn-primary" %>
+
+</center>

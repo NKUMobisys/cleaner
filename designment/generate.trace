@@ -9,3 +9,8 @@ rails g migration AddStudyStateToUser
 
 2017-07-17 14:43:56
 rails g model RevealHistory user:references seed:integer{8} scratch:text clean_history:references
+
+2017-11-07 18:15:09
+rails g model RevealInvolver user:references reveal_history:references ticket:decimal
+rails g migration AddCleanStateToUser
+rails g controller Admin index
