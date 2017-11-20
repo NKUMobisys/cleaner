@@ -21,6 +21,7 @@ class MainController < ApplicationController
     @cleaners = get_current_cleaner
 
     @cleaner = @cleaners.first
+    @cleaner.name = conv_cleaner_name(@cleaner.name)
     gen_cleaner_info
 
     @cleaner_info = get_cleaner_info
