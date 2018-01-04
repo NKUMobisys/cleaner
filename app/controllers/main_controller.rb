@@ -149,18 +149,26 @@ class MainController < ApplicationController
       seed = (Time.now.to_f * 1000).to_i # - SecureRandom.hex(1).to_i(16)
       users = []
       in_lab_users = User.cando
+      lottery_pool = []
       loop do
         if today_is_weekend?
           break
         end
 
-        lottery_pool = []
         min_ticket = 0x3f3f3f3f
         in_lab_users.each do |u|
           uticket = u.ticket.to_i
           min_ticket = [min_ticket, uticket].min
           User.vt(uticket).times { lottery_pool.push u }
         end
+
+        in_lab_users.reverse.each do |u|
+          uticket = u.ticket.to_i
+          deta = uticket-min_ticket
+          next if deta<2
+          (deta**5).times { lottery_pool.push u }
+        end
+
         if lottery_pool.empty?
           User.refresh_all_tickets
           break
@@ -196,9 +204,11 @@ class MainController < ApplicationController
       rh.save!
       RevealHistory.transaction do
         in_lab_users.each do |u|
-          rh.involvers << RevealInvolver.new(user_id: u.id, ticket: u.ticket)
+          rh.involvers << RevealInvolver.new(user_id: u.id, ticket: u.ticket, vticket: lottery_pool.count(u))
         end
       end
+
+      @reveal_history = rh
 
       @clean_history = ch
       true
@@ -233,19 +243,20 @@ class MainController < ApplicationController
         end
       end
 
-      @total_tickets = 0
-
-      User.cando.each do |u|
-        @total_tickets += User.vt(u.ticket)
-      end
+      # @total_tickets = 0
+      #
+      # User.cando.each do |u|
+      #   @total_tickets += User.vt(u.ticket)
+      # end
 
       rh = RevealHistory.last
 
       @reveal_total_ticket = 0.0
       @reveal_cleaner_ticket = 0
+      @user_vtickets = {}
       rh.involvers.each do |iv|
-        @reveal_cleaner_ticket = User.vt(iv.ticket) if iv.user_id == @cleaner.id
-        @reveal_total_ticket += User.vt(iv.ticket)
+        @user_vtickets[iv.user_id] = iv.vticket
+        @reveal_total_ticket += iv.vticket
       end
       @cleaner_lucky = (@reveal_cleaner_ticket / @reveal_total_ticket *100).round(1)
     end

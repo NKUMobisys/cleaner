@@ -47,7 +47,7 @@
       <span class="emoji"><%# @emoji[i] %></span>
       <%= u.name %></td>
     <td><%= u.ticket %></td>
-    <td><%= (User.vt(u.ticket)/ @total_tickets.to_f * 100).round(1) %>%</td>
+    <td><%= (@user_vtickets[u.id]/ @reveal_total_ticket.to_f * 100).round(1) %>%</td>
     <!-- <td></td> -->
       <!-- <td></td> -->
   </tr>

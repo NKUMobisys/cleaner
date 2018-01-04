@@ -6,7 +6,7 @@ class User < ApplicationRecord
   scope :away, ->{ inlab.where(clean_state: 2) }
 
   def self.refresh_all_tickets
-    cando.each do |u|
+    inlab.each do |u|
       u.ticket = 5
       u.save!
     end

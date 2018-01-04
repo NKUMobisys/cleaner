@@ -14,3 +14,7 @@ rails g model RevealHistory user:references seed:integer{8} scratch:text clean_h
 rails g model RevealInvolver user:references reveal_history:references ticket:decimal
 rails g migration AddCleanStateToUser
 rails g controller Admin index
+
+
+2018-01-04 22:12:44
+rails g migration AddVticketToRevealInvolver
