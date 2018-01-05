@@ -6,7 +6,9 @@ class MainController < ApplicationController
     judge_opening or return
 
     @unreveal = false
-    CleanHistory.last.destroy
+    if ENV['RAILS_DEV_MACHINE']
+      CleanHistory.last.destroy
+    end
     if should_gen_new_cleaner
       @unreveal = gen_new_cleaner
     else
