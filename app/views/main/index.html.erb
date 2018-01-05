@@ -1,8 +1,13 @@
+<div id="nav">
+  <span><%= link_to "改动日志", admin_changelog_path, class: "btn btn-primary", target: :_blank  %></span>
+  <span><%= link_to "欧皇堂", euro_list_path, class: "btn btn-primary", target: :_blank  %></span>
+
+</div>
+
 <center>
 <h1><%= Date.current %> 今天谁做卫生~~？</h1>
 
 <div id="main-info">
-
   <% if @cleaner_info[:type] == :normal %>
 
   <div id="scratch">
@@ -27,7 +32,7 @@
     </div>
     <% end %>
   <% else %>
-  <h1><%= @special %></h1>
+  <h1><%= @cleaner_info[:special] %></h1>
   <% end %>
 
 </div>
@@ -47,7 +52,7 @@
       <span class="emoji"><%# @emoji[i] %></span>
       <%= u.name %></td>
     <td><%= u.ticket %></td>
-    <td><%= (@user_vtickets[u.id]/ @reveal_total_ticket.to_f * 100).round(1) %>%</td>
+    <td><%= (@user_vtickets_now[u.id]/ @total_ticket_now.to_f * 100).round(1) %>%</td>
     <!-- <td></td> -->
       <!-- <td></td> -->
   </tr>

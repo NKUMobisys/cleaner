@@ -1,0 +1,35 @@
+<div id="euro">
+
+  <div id="background">
+    <%= image_tag 'euro.png' %>
+  </div>
+
+  <div id="container">
+    <div id="title">欧皇堂</div>
+
+    <strong id="first">初代欧皇</strong>
+    <div>
+      <% EuroHistory.first.users.each do |u| %>
+      <div class="name"><%= u.name %></div>
+      <% end %>
+      <div class="date">登基 <%=  EuroHistory.first.reveal_history.created_at.strftime("%Y-%m-%d") %></div>
+
+    </div>
+
+    <hr>
+
+    <div id="all-title">历代欧皇</div>
+    <div>
+      <% EuroHistory.all[1..-1].each_with_index do |eh|%>
+
+      <% eh.users.each do |u| %>
+      <div class="name"><%= u.name %></div>
+      <% end %>
+      <div class="date">登基:<%=  eh.reveal_history.created_at.strftime("%Y-%m-%d") %></div>
+
+      <% end %>
+
+    </div>
+  </div>
+
+</div>

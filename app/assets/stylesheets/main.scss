@@ -1,7 +1,9 @@
 // Place all the styles related to the Main controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-
+body{
+  margin: 0;
+}
 .cleaner {
     height: 100%;
     font-weight: bold;
@@ -71,4 +73,53 @@ td{
 
 #submit-lucky{
   visibility: hidden;
+}
+
+#nav{
+  padding-left: 1em;
+  span{
+    margin-right: 2em;
+  }
+  a{
+    text-decoration: none;
+  }
+}
+
+
+#euro{
+  position: absolute;
+  padding: 0.1px;
+  width: 100%;
+  #background img{
+    position: absolute;
+    width: 100%;
+    z-index: -999;
+  }
+  #container{
+    width: 666px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.77);
+    margin-top: 66px;
+    padding: 32px;
+    text-align: center;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+  #title{
+    color: gold;
+    font-size: 66px;
+    font-weight: bold;
+  }
+  #first{
+    font-size: 32px;
+  }
+
+  #all-title{
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .date{
+    color: gray;
+  }
 }

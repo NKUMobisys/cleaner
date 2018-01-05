@@ -10,7 +10,9 @@ Rails.application.routes.draw do
   end
 
 
+
   get 'admin/index'
+  get 'admin/changelog'
   post 'admin/clean_state'
   post 'admin/away_state'
 
@@ -18,6 +20,7 @@ Rails.application.routes.draw do
   get 'main/waiting', as: 'waiting'
   get 'timeout', to: 'main#timeout'
   get 'sync_user', to: 'main#sync_user', as: 'sync_user'
+  get 'euro_list', to: 'main#euro_list', as: 'euro_list'
 
   post 'lucky_card', to: 'main#lucky_card', as: 'lucky_card'
 

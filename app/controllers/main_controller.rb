@@ -6,7 +6,7 @@ class MainController < ApplicationController
     judge_opening or return
 
     @unreveal = false
-    # CleanHistory.last.destroy
+    CleanHistory.last.destroy
     if should_gen_new_cleaner
       @unreveal = gen_new_cleaner
     else
@@ -23,8 +23,9 @@ class MainController < ApplicationController
     @cleaner = @cleaners.first
     @cleaner.name = conv_cleaner_name(@cleaner.name)
     gen_cleaner_info
-
     @cleaner_info = get_cleaner_info
+
+    gen_tickets_info
   end
 
   def waiting
@@ -82,6 +83,9 @@ class MainController < ApplicationController
     render json: {status: :ok}
   end
 
+  def euro_list
+  end
+
   protected
     def judge_opening
       if Time.current < @open_time
@@ -90,6 +94,11 @@ class MainController < ApplicationController
       end
       if opening?
         render 'wait_opening'
+        return
+      end
+      if today_is_weekend?
+        @cleaner_info = get_cleaner_info
+        render
         return
       end
 
@@ -142,44 +151,53 @@ class MainController < ApplicationController
       name
     end
 
+    def gen_lottery_pool(cando_users)
+      lottery_pool = []
+      min_ticket = 0x3f3f3f3f
+      cando_users.each do |u|
+        uticket = u.ticket.to_i
+        min_ticket = [min_ticket, uticket].min
+        User.vt(uticket).times { lottery_pool.push u }
+      end
+
+      cando_users.reverse.each do |u|
+        uticket = u.ticket.to_i
+        deta = uticket-min_ticket
+        next if deta<2
+        (deta**5).times { lottery_pool.push u }
+      end
+
+      lottery_pool
+    end
+
     def gen_new_cleaner
+      cando_users = User.cando
+      least_ticket_u = cando_users.order('ticket').first
+      if least_ticket_u.ticket.to_i == 0
+        eu = EuroHistory.new(reveal_history: RevealHistory.last)
+        eu.save!
+        User.refresh_all_tickets
+        gen_new_cleaner
+        return true
+      end
+
       ch = CleanHistory.new
       ch.date = Date.current
 
       seed = (Time.now.to_f * 1000).to_i # - SecureRandom.hex(1).to_i(16)
       users = []
-      in_lab_users = User.cando
+
       lottery_pool = []
       loop do
-        if today_is_weekend?
-          break
-        end
+        lottery_pool = gen_lottery_pool(cando_users)
 
-        min_ticket = 0x3f3f3f3f
-        in_lab_users.each do |u|
-          uticket = u.ticket.to_i
-          min_ticket = [min_ticket, uticket].min
-          User.vt(uticket).times { lottery_pool.push u }
-        end
-
-        in_lab_users.reverse.each do |u|
-          uticket = u.ticket.to_i
-          deta = uticket-min_ticket
-          next if deta<2
-          (deta**5).times { lottery_pool.push u }
-        end
-
-        if lottery_pool.empty?
-          User.refresh_all_tickets
-          break
-        end
 
         # TODO
         # unless Date.current.monday? || Date.current.friday?
         #   (User.vt(min_ticket)/2).times { lottery_pool.push nil }
         # end
 
-        p seed, User.vt(min_ticket)/2, lottery_pool.size
+        p seed, lottery_pool.size
 
         idx = seed % lottery_pool.size
         cleaner = lottery_pool[idx]
@@ -203,7 +221,7 @@ class MainController < ApplicationController
       rh.seed = seed
       rh.save!
       RevealHistory.transaction do
-        in_lab_users.each do |u|
+        cando_users.each do |u|
           rh.involvers << RevealInvolver.new(user_id: u.id, ticket: u.ticket, vticket: lottery_pool.count(u))
         end
       end
@@ -243,22 +261,15 @@ class MainController < ApplicationController
         end
       end
 
-      # @total_tickets = 0
-      #
-      # User.cando.each do |u|
-      #   @total_tickets += User.vt(u.ticket)
-      # end
-
       rh = RevealHistory.last
 
       @reveal_total_ticket = 0.0
-      @reveal_cleaner_ticket = 0
-      @user_vtickets = {}
+      user_vtickets = {}
       rh.involvers.each do |iv|
-        @user_vtickets[iv.user_id] = iv.vticket
+        user_vtickets[iv.user_id] = iv.vticket
         @reveal_total_ticket += iv.vticket
       end
-      @cleaner_lucky = (@reveal_cleaner_ticket / @reveal_total_ticket *100).round(1)
+      @cleaner_lucky = (user_vtickets[@cleaner.id] / @reveal_total_ticket *100).round(1)
     end
 
     def get_cleaner_info
@@ -275,4 +286,15 @@ class MainController < ApplicationController
       {type: :error, cleaner: nil}
     end
 
+    def gen_tickets_info
+      cando_now = User.cando
+      lottery_pool = gen_lottery_pool(cando_now)
+      @user_vtickets_now = {}
+      @total_ticket_now = 0
+      cando_now.each do |u|
+        vticket = lottery_pool.count(u)
+        @user_vtickets_now[u.id] = vticket
+        @total_ticket_now += vticket
+      end
+    end
 end

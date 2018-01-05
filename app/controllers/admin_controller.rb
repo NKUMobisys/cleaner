@@ -26,4 +26,7 @@ class AdminController < ApplicationController
     u.save
     render plain: [params['id'], params['checked']].to_json
   end
+
+  def changelog
+  end
 end

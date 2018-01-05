@@ -18,3 +18,7 @@ rails g controller Admin index
 
 2018-01-04 22:12:44
 rails g migration AddVticketToRevealInvolver
+
+
+2018-01-05 09:56:28
+rails g model EuroHistory reveal_history:references
