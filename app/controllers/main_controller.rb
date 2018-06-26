@@ -7,7 +7,8 @@ class MainController < ApplicationController
 
     @unreveal = false
     if ENV['RAILS_DEV_MACHINE']
-      CleanHistory.last.destroy
+      # CleanHistory.last.destroy
+      @gen_new_ch = true
     end
     if should_gen_new_cleaner
       @unreveal = gen_new_cleaner
@@ -131,6 +132,7 @@ class MainController < ApplicationController
       ch = CleanHistory.last
       return true if ch.nil?
       return true if ch.date < Date.current
+      return true if @gen_new_ch
 
       if !ch.users.empty? && ch.reveal_history&.scratch.nil?
         ch.destroy
